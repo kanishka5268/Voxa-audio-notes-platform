@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+:root {
+  /* DARK MODE (PRIMARY DESIGN) */
+  --bg-primary: #05090D;
+  --bg-sidebar: #0B1218;
+  --surface: #0B151C;
+  --surface-upload: #0B151C;
+  --surface-secondary: #101D25;
+  --surface-control: #101D25;
+  --surface-hover: #14232E;
+  --surface-card: #0B151C;
+  --surface-recent: #0B151C;
+  --border: #22313A;
+  --border-subtle: #17242C;
+
+  --text-primary: #F1F4F5;
+  --text-secondary: #8D9AA3;
+  --text-muted: #60717B;
+
+  /* PRIMARY ACTION: #FF6668 (Text: Dark Navy #05090D) */
+  --coral: #FF6668;
+  --coral-muted: #E85D61;
+  --coral-hover: #FF7B7D;
+  --coral-active: #E65557;
+  --coral-text: #05090D;
+
+  /* WAVEFORM SPECTRUM COLORS */
+  --wave-cyan: #36C7E8;
+  --wave-blue: #438CFF;
+  --wave-violet: #7657E8;
+  --wave-pink: #D94D9A;
+  --wave-coral: #FF6B68;
+
+  /* SEMANTIC */
+  --success: #36D399;
+  --warning: #FBBD23;
+  --error: #FF6668;
+}
+
+/* LIGHT MODE OVERRIDES: EXACT EDITORIAL STONE PALETTE & HIERARCHY */
+html.light, [data-theme="light"] {
+  --bg-primary: #E4E0D8;
+  --bg-sidebar: #D3D0C8;
+  --surface: #F0EDE6;
+  --surface-upload: #F0EDE6;
+  --surface-secondary: #E9E5DE;
+  --surface-control: #E9E5DE;
+  --surface-card: #ECE9E3;
+  --surface-recent: #ECE9E3;
+  --surface-hover: #E0DDD4;
+  --border: #B8B3AA;
+  --border-subtle: #C7C2B9;
+
+  --text-primary: #171A1D;
+  --text-secondary: #646A6D;
+  --text-muted: #82888B;
+
+  /* PRIMARY ACTION */
+  --coral: #FF6668;
+  --coral-muted: #D95458;
+  --coral-hover: #FF7B7D;
+  --coral-active: #E65557;
+  --coral-text: #05090D;
+
+  /* LIGHT MODE WAVEFORM COLORS */
+  --wave-cyan: #4AAFC8;
+  --wave-blue: #6288D8;
+  --wave-violet: #9B82C7;
+  --wave-pink: #D486A8;
+  --wave-coral: #F07872;
+}
+
+@theme inline {
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
+  --font-display: var(--font-dm-serif);
+  --font-sans: var(--font-dm-sans);
+  --font-mono: var(--font-dm-sans);
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-dm-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.01em;
+  overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Headings default to DM Sans; editorial hero headings use .font-display (DM Serif Display) */
+h1, h2, h3 {
+  font-family: var(--font-dm-sans), sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.font-display {
+  font-family: var(--font-dm-serif), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+code, pre, .font-mono {
+  font-family: var(--font-dm-sans), monospace;
+  letter-spacing: normal;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Audio Wave Ribbon Motion Keyframes (25-45s duration) */
+@keyframes waveRibbonDrift1 {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(-30px, 12px) scale(1.02);
+  }
+  66% {
+    transform: translate(25px, -10px) scale(0.98);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes waveRibbonDrift2 {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  40% {
+    transform: translate(35px, -15px) scale(1.03);
+  }
+  75% {
+    transform: translate(-20px, 10px) scale(0.97);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes waveRibbonDrift3 {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(-20px, 14px) scale(1.01);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes wavePulseGlow {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-wave-1 {
+  animation: waveRibbonDrift1 34s ease-in-out infinite;
+}
+
+.animate-wave-2 {
+  animation: waveRibbonDrift2 42s ease-in-out infinite;
+}
+
+.animate-wave-3 {
+  animation: waveRibbonDrift3 28s ease-in-out infinite;
+}
+
+.animate-wave-pulse {
+  animation: wavePulseGlow 3.5s ease-in-out infinite;
+}
+
+/* Equalizer / frequency bar animations for upload dropzone */
+@keyframes barPulseHover {
+  0%, 100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.5);
+  }
+}
+
+@keyframes barProcessing {
+  0%, 100% {
+    transform: scaleY(0.7);
+  }
+  50% {
+    transform: scaleY(1.6);
+  }
+}
+
+.animate-bar-hover {
+  animation: barPulseHover 1.4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.animate-bar-processing {
+  animation: barProcessing 0.9s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-wave-1,
+  .animate-wave-2,
+  .animate-wave-3,
+  .animate-wave-pulse,
+  .animate-bar-hover,
+  .animate-bar-processing {
+    animation: none !important;
+    transform: none !important;
+  }
+}
