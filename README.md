@@ -13,12 +13,6 @@ Voxa is a multilingual audio transcription and AI summarization platform. It ena
 
 ---
 
-## Repository
-
-[View the source code on GitHub](https://github.com/kanishka5268/Voxa-audio-notes-platform)
-
----
-
 ## Features
 
 - **Audio Upload**: Drag-and-drop workspace supporting MP3, WAV, M4A, AAC, OGG, WEBM, FLAC, OPUS, and MP4 up to 100MB.
