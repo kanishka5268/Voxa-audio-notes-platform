@@ -308,7 +308,7 @@ export default function Home() {
                 className={`relative rounded-xl border border-dashed px-6 py-8 sm:py-10 text-center transition-all duration-200 cursor-pointer ${
                   isDragging
                     ? "border-[var(--coral)] bg-[var(--surface-hover)] shadow-lg shadow-[var(--coral)]/10"
-                    : "border-[var(--border)] bg-[var(--surface-upload)] hover:border-[var(--coral)]/60 hover:bg-[var(--surface-hover)]/80"
+                    : "border-[var(--border)] bg-[var(--surface-upload)] hover:border-[var(--coral)]/60 hover:bg-[var(--surface-hover)]/80 shadow-xs"
                 }`}
                 style={{
                   backdropFilter: "blur(8px)",

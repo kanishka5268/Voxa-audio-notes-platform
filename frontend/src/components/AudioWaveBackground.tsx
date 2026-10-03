@@ -282,7 +282,7 @@ export default function AudioWaveBackground({ status = "idle" }: AudioWaveBackgr
           style={{
             background: isDark
               ? "radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(5, 9, 13, 0.70) 90%, #05090D 100%)"
-              : "radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(228, 224, 216, 0.60) 90%, #E4E0D8 100%)",
+              : "radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(248, 247, 244, 0.60) 90%, #F8F7F4 100%)",
           }}
         />
       </div>
