@@ -1,6 +1,21 @@
 # Voxa
 
-Voxa is a high-performance, multilingual audio transcription and AI summarization platform. It enables users to upload audio files in various formats, transcribe spoken speech into text using Gnani AI's Prisma v2.5 Batch Speech-to-Text engine, and generate concise, grounded summaries in the speaker's language using Groq Cloud LLM inference.
+Voxa is a multilingual audio transcription and AI summarization platform. It enables users to upload audio files in various formats, transcribe spoken speech using Gnani AI's Prisma v2.5 Batch Speech-to-Text engine, and generate grounded summaries using Groq Cloud LLM inference.
+
+---
+
+## Live Demo
+
+- **Frontend:** [Voxa](YOUR_VERCEL_URL)
+- **Backend API:** [FastAPI API](YOUR_RENDER_URL)
+- **API Docs:** [Swagger / OpenAPI](YOUR_RENDER_URL/docs)
+- **Architecture:** Available at `/architecture`
+
+---
+
+## Repository
+
+[View the source code on GitHub](https://github.com/kanishka5268/Voxa-audio-notes-platform)
 
 ---
 
@@ -8,9 +23,9 @@ Voxa is a high-performance, multilingual audio transcription and AI summarizatio
 
 - **Audio Upload**: Drag-and-drop workspace supporting MP3, WAV, M4A, AAC, OGG, WEBM, FLAC, OPUS, and MP4 up to 100MB.
 - **Gnani-Powered Transcription**: Production speech-to-text powered by Gnani AI's Prisma v2.5 Batch API.
-- **Multilingual Transcription**: Native support for Indian and global languages including English (India), Hindi, Bengali, Kannada, Malayalam, Marathi, Tamil, and Telugu.
-- **AI-Generated Summaries**: Ultra-low-latency 2–4 sentence grounded summaries powered by Groq LLM inference, strictly aligned with the audio's spoken language.
-- **Background Processing**: Asynchronous worker execution with non-blocking HTTP upload responses and live progress tracking.
+- **Multilingual Transcription**: Supports Indian languages including English (India), Hindi, Bengali, Kannada, Malayalam, Marathi, Tamil, and Telugu.
+- **AI-Generated Summaries**: Grounded AI summaries generated with Groq LLM inference, with summary length adapted to the transcript and generated in the transcript's language.
+- **Background Processing**: Asynchronous processing using FastAPI BackgroundTasks, allowing uploads to return without waiting for transcription and summarization.
 - **Upload History**: Sidebar list displaying recent audio recordings, language tags, timestamps, and status indicators.
 - **Private Audio Playback**: In-browser audio streaming using secure, time-limited signed URLs from private object storage.
 - **Transcript Viewing**: Complete text container with line-height readability and 1-click clipboard copy.
@@ -23,25 +38,25 @@ Voxa is a high-performance, multilingual audio transcription and AI summarizatio
 
 ```text
 User
-  │
-  ▼
-Next.js Frontend (App Router, Turbopack, Tailwind CSS)
-  │ (multipart/form-data upload)
-  ▼
+ |
+ v
+Next.js Frontend
+ | (multipart/form-data upload)
+ v
 FastAPI REST API
-  ├──► Supabase Storage (Private 'audio' bucket)
-  ├──► Supabase PostgreSQL (audio_notes table: status='uploaded')
-  │
-  ▼ (BackgroundTasks Dispatch)
-Async Worker
-  ├──► Gnani Batch STT (Create Job → Start Job → Poll Status → Download Transcript)
-  ├──► Groq LLM (Language-aware prompt → Grounded 2-4 sentence summary)
-  │
-  ▼
-Supabase PostgreSQL (status='completed', progress=100)
-  │
-  ▼ (Polling GET /api/audio/notes/{id})
-Frontend Detail View (/notes/[id] with private audio player, transcript, and summary)
+ +--> Supabase Storage
+ +--> Supabase PostgreSQL
+ |
+ v
+Background Processing (FastAPI BackgroundTasks)
+ +--> Gnani Batch STT
+ +--> Groq LLM
+ |
+ v
+Supabase PostgreSQL
+ |
+ v
+Frontend Detail View
 ```
 
 ---
@@ -56,7 +71,8 @@ Frontend Detail View (/notes/[id] with private audio player, transcript, and sum
 - **Deployment**: Vercel
 
 ### Backend
-- **Framework**: FastAPI (Async Python 3.9+)
+- **Framework**: FastAPI
+- **Language**: Python 3.9+
 - **ASGI Server**: Uvicorn
 - **Task Runner**: FastAPI BackgroundTasks
 - **Deployment**: Render / Container
@@ -75,11 +91,11 @@ Frontend Detail View (/notes/[id] with private audio player, transcript, and sum
 
 1. **Client Upload**: The user drops an audio file onto the Voxa dropzone and selects a language (or auto-detect).
 2. **Storage Ingestion**: FastAPI receives the file, uploads the raw binary to private Supabase Storage, and creates a metadata record in PostgreSQL with `status="uploaded"` and `progress=0`.
-3. **Immediate Response**: The HTTP upload request completes in milliseconds, returning the created note record so the client is never blocked.
+3. **Immediate Response**: After validating the file, storing it in Supabase Storage, and creating the note record, FastAPI schedules background processing and returns the note record without waiting for transcription or summarization.
 4. **Gnani Batch Job**: The background task sends the audio bytes to Gnani AI, creates a batch transcription job with the specified language, and triggers the job start.
-5. **Asynchronous Polling**: The worker polls Gnani until completion, updating database progress monotonically (`progress: 25% → 70%`).
-6. **Transcript Extraction**: Upon completion, the worker downloads and extracts the raw transcript text.
-7. **Groq Summarization**: The transcript is submitted to Groq's OpenAI-compatible inference API with a strict system prompt configured in the audio's spoken language (`progress: 85%`).
+5. **Asynchronous Polling**: The background task polls Gnani until completion, updating database progress monotonically (`progress: 25% -> 70%`).
+6. **Transcript Extraction**: Upon completion, the background task downloads and extracts the raw transcript text.
+7. **Groq Summarization**: The transcript is submitted to Groq's OpenAI-compatible inference API with a language-aware prompt to generate a grounded summary adapted to the transcript (`progress: 85%`).
 8. **Final Persistence**: The database record is marked as `completed` with `progress: 100`, committing the final transcript and summary.
 9. **Client Presentation**: The frontend poll resolves, rendering the private audio player, AI summary card, and readable transcript.
 
@@ -187,11 +203,11 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Design Decisions
 
-- **Why Background Processing**: Long-form speech-to-text batch transcription and LLM inference take from 15 seconds to several minutes. Offloading processing to asynchronous background workers prevents HTTP 504 gateway timeouts and releases client upload threads immediately.
-- **Why Polling**: Lightweight interval polling (`GET /api/audio/notes/{id}` every 3 seconds) offers high resilience across mobile sleep cycles, network switches, and stateless container instances without the operational complexity or connection drops of WebSockets.
-- **Why Supabase Storage**: Dedicated object storage eliminates database bloat from large binary files, supports high-throughput streaming, and allows minting time-limited signed URLs for private audio playback.
-- **Why Gnani Batch STT**: Asynchronous batch job APIs are specifically designed for long-duration audio without socket dropouts or stream chunking errors.
-- **Why Groq**: Groq Cloud's LPU inference delivers near-instant summarization latency, ensuring that once speech transcription completes, the summary is available within seconds.
+- **Why Background Processing**: Speech transcription and LLM inference can take longer than a normal HTTP request, so processing is moved into FastAPI BackgroundTasks rather than keeping the upload request open.
+- **Why Polling**: Lightweight interval polling (`GET /api/audio/notes/{id}` every 3 seconds) offers resilience across network switches and stateless container instances without the operational complexity or connection management of WebSockets.
+- **Why Supabase Storage**: Dedicated object storage keeps large binary audio files outside PostgreSQL and allows the backend to generate time-limited signed URLs for private audio playback.
+- **Why Gnani Batch STT**: Gnani's Batch STT API provides an asynchronous job workflow suited to longer audio files, allowing the backend to create, start, and poll transcription jobs.
+- **Why Groq**: Groq Cloud LLM inference is used to generate grounded summaries after transcription completes.
 
 ---
 
