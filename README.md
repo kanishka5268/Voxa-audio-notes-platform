@@ -6,10 +6,9 @@ Voxa is a multilingual audio transcription and AI summarization platform. It ena
 
 ## Live Demo
 
-- **Frontend:** [Voxa](YOUR_VERCEL_URL)
-- **Backend API:** [FastAPI API](YOUR_RENDER_URL)
-- **API Docs:** [Swagger / OpenAPI](YOUR_RENDER_URL/docs)
-- **Architecture:** Available at `/architecture`
+**[Voxa — Live Application](https://voxa-audio-notes-platform.vercel.app/)**
+
+The frontend is deployed on Vercel and the backend is deployed on Render.
 
 ---
 
@@ -34,16 +33,22 @@ Voxa is a multilingual audio transcription and AI summarization platform. It ena
 User
  |
  v
-Next.js Frontend
- | (multipart/form-data upload)
+Next.js Frontend (Vercel)
+ |
+ | multipart/form-data
  v
-FastAPI REST API
+FastAPI REST API (Render)
+ |
  +--> Supabase Storage
+ |
  +--> Supabase PostgreSQL
  |
  v
-Background Processing (FastAPI BackgroundTasks)
+Background Processing
+(FastAPI BackgroundTasks)
+ |
  +--> Gnani Batch STT
+ |
  +--> Groq LLM
  |
  v
@@ -167,19 +172,19 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Frontend (Vercel)
 - Connect repository to Vercel with Root Directory set to `frontend`.
-- Environment Variable: `NEXT_PUBLIC_API_URL` set to the deployed backend URL (e.g., `https://voxa-api.onrender.com`).
+- Environment Variable: `NEXT_PUBLIC_API_URL=https://voxa-backend-fbdy.onrender.com`).
 - Build Command: `npm run build`.
 
 ### Backend (Render)
 - Deploy as a Web Service on Render with Root Directory set to `backend`.
 - Build Command: `pip install -r requirements.txt`.
-- Start Command: `uvicorn main:app --host 0.0.0.0 --port 10000`.
+- Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`.
 - Environment Variables:
   - `SUPABASE_URL`
   - `SUPABASE_SERVICE_ROLE_KEY`
   - `GNANI_API_KEY`
   - `GROQ_API_KEY`
-  - `FRONTEND_URL` (set to your Vercel domain, e.g., `https://voxa.vercel.app`)
+  - `FRONTEND_URL=https://voxa-audio-notes-platform.vercel.app`
 
 ---
 
