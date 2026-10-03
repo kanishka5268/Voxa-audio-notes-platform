@@ -4,3 +4,4 @@ supabase>=2.0.0
 python-dotenv>=1.0.0
 python-multipart>=0.0.18
 openai>=1.0.0
+requests
