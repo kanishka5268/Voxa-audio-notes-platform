@@ -47,6 +47,24 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
     };
   }, [openMenuId]);
 
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    if (isOpen && onClose) {
+      onClose();
+    }
+  }, [pathname]);
+
+  // Prevent background scrolling when mobile sidebar is open
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
+
   const displayedNotes = showArchived ? archivedNotes : notes;
   const currentLoading = showArchived ? isArchivedLoading : isLoading;
 
@@ -205,12 +223,14 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed md:static inset-y-0 left-0 z-50 flex h-screen w-72 shrink-0 flex-col border-r border-[var(--border)] bg-[var(--bg-sidebar)] transition-transform duration-200 ease-in-out md:translate-x-0 relative overflow-hidden ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed inset-y-0 left-0 z-50 flex h-screen h-[100dvh] max-h-[100dvh] w-72 max-w-[85vw] flex-col border-r border-[var(--border)] bg-[var(--bg-sidebar)] transition-transform duration-200 ease-in-out overflow-hidden md:static md:h-screen md:max-h-screen md:translate-x-0 ${
+          isOpen
+            ? "translate-x-0 shadow-2xl pointer-events-auto"
+            : "-translate-x-full pointer-events-none md:pointer-events-auto md:shadow-none"
         }`}
       >
         {/* TOP: Brand & New Recording CTA */}
-        <div className="relative z-10 flex flex-col gap-3 p-3.5 border-b border-[var(--border)]">
+        <div className="relative z-10 flex flex-col gap-3 p-3.5 border-b border-[var(--border)] shrink-0">
           <div className="flex items-center justify-between">
             <Link
               href="/"
@@ -261,8 +281,8 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         </div>
 
         {/* MIDDLE: RECENT AUDIO RECORDS & ARCHIVE FILTER */}
-        <div className="relative z-10 flex flex-1 flex-col overflow-hidden px-2.5 py-3">
-          <div className="flex items-center justify-between px-2 pb-2">
+        <div className="relative z-10 flex flex-1 min-h-0 flex-col overflow-hidden px-2.5 py-3">
+          <div className="flex items-center justify-between px-2 pb-2 shrink-0">
             <h2 className="text-[10px] font-sans font-semibold uppercase tracking-wider text-[var(--text-muted)]">
               {showArchived ? "Archived Audio" : "Recent Audio"}
             </h2>
@@ -280,7 +300,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto space-y-1 pr-0.5">
+          <div className="flex-1 min-h-0 overflow-y-auto space-y-1 pr-0.5 overscroll-contain">
             {currentLoading && (
               <div className="space-y-1.5 py-1">
                 {[1, 2, 3].map((i) => (
@@ -524,7 +544,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         </div>
 
         {/* BOTTOM: Architecture & GitHub */}
-        <div className="relative z-10 border-t border-[var(--border)] p-2.5 flex flex-col gap-0.5 text-xs font-sans">
+        <div className="relative z-10 border-t border-[var(--border)] p-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] flex flex-col gap-0.5 text-xs font-sans shrink-0">
           <Link
             href="/architecture"
             onClick={onClose}

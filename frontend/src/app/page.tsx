@@ -278,7 +278,7 @@ export default function Home() {
   const isBarsAnimating = isHovered || isDragging || isProcessing;
 
   return (
-    <div className="flex min-h-full flex-col items-center justify-start px-4 pt-10 sm:pt-[46px] pb-16">
+    <div className="flex min-h-full w-full max-w-full flex-col items-center justify-start px-4 pt-6 sm:pt-[46px] pb-16 overflow-x-hidden">
       <div className="w-full max-w-xl flex flex-col items-stretch">
         {/* FIXED / STABLE HERO COMPOSITION */}
         <div className="w-full space-y-6 sm:space-y-8">
@@ -456,7 +456,7 @@ export default function Home() {
               <div className="flex items-center justify-between gap-2">
                 <label
                   htmlFor="language-select"
-                  className="text-[11px] font-sans font-semibold uppercase tracking-wider text-[var(--text-secondary)]"
+                  className="text-[11px] font-sans font-semibold uppercase tracking-wider text-[var(--text-secondary)] shrink-0"
                 >
                   Speech Language
                 </label>
@@ -473,7 +473,7 @@ export default function Home() {
                     }
                   }}
                   disabled={isUploading || isProcessing}
-                  className="text-xs font-sans font-medium rounded-lg border border-[var(--border)] bg-[var(--surface-card)] text-[var(--text-primary)] px-2.5 py-1.5 focus:outline-none focus:border-[var(--coral)] cursor-pointer"
+                  className="text-xs font-sans font-medium rounded-lg border border-[var(--border)] bg-[var(--surface-card)] text-[var(--text-primary)] px-2.5 py-1.5 focus:outline-none focus:border-[var(--coral)] cursor-pointer max-w-[62%] sm:max-w-none truncate"
                 >
                   {SUPPORTED_LANGUAGES.map((lang) => (
                     <option key={lang.code} value={lang.code}>

@@ -28,14 +28,14 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
       />
 
       {/* Main Content Area */}
-      <div className="relative z-10 flex flex-1 flex-col min-w-0 h-screen overflow-hidden">
+      <div className="relative z-10 flex flex-1 flex-col min-w-0 w-full h-screen overflow-hidden">
         {/* Mobile Top Navigation Bar */}
-        <header className="flex h-14 md:hidden items-center justify-between border-b border-[var(--border)] bg-[var(--bg-secondary)]/90 backdrop-blur-md px-4 shrink-0">
+        <header className="flex h-14 md:hidden items-center justify-between border-b border-[var(--border)] bg-[var(--bg-primary)]/95 backdrop-blur-md px-3 sm:px-4 shrink-0 w-full">
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="rounded-lg p-2 text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)] transition-colors"
+              className="rounded-lg p-2 text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
               aria-label="Open sidebar menu"
             >
               <svg
@@ -61,11 +61,11 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
             </Link>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <ThemeToggle />
             <Link
               href="/"
-              className="text-xs font-semibold text-[var(--coral)] hover:opacity-80 transition-opacity"
+              className="text-xs font-semibold text-[var(--coral)] hover:opacity-80 transition-opacity px-1"
             >
               + New
             </Link>
@@ -80,7 +80,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Main Workspace (Scrollable) */}
-        <main className="flex-1 overflow-y-auto [scrollbar-gutter:stable]">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden w-full max-w-full [scrollbar-gutter:stable]">
           {children}
         </main>
       </div>
