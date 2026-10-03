@@ -54,16 +54,16 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
     }
   }, [pathname]);
 
-  // Prevent background scrolling when mobile sidebar is open
+  // Prevent background scrolling when mobile sidebar or delete modal is open
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen || noteToDelete) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
       return () => {
         document.body.style.overflow = originalOverflow;
       };
     }
-  }, [isOpen]);
+  }, [isOpen, noteToDelete]);
 
   const displayedNotes = showArchived ? archivedNotes : notes;
   const currentLoading = showArchived ? isArchivedLoading : isLoading;
@@ -166,59 +166,6 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs md:hidden"
           aria-hidden="true"
         />
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {noteToDelete && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4"
-          onClick={() => !isDeleting && setNoteToDelete(null)}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm rounded-xl border border-[var(--border)] bg-[var(--surface-card)] p-5 space-y-4 shadow-2xl"
-          >
-            <div className="space-y-1.5">
-              <h3 className="text-sm font-sans font-semibold text-[var(--text-primary)]">
-                Delete this recording?
-              </h3>
-              <p className="text-xs font-sans text-[var(--text-secondary)] leading-relaxed">
-                This will permanently delete the audio, transcript and summary.
-              </p>
-            </div>
-
-            <div className="flex items-center justify-end gap-2.5 pt-1">
-              <button
-                type="button"
-                disabled={isDeleting}
-                onClick={() => setNoteToDelete(null)}
-                className="rounded-lg border border-[var(--border)] bg-[var(--surface-secondary)] hover:bg-[var(--surface-hover)] px-3.5 py-1.5 text-xs font-sans font-medium text-[var(--text-primary)] transition-colors disabled:opacity-50 cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={isDeleting}
-                onClick={async () => {
-                  if (!noteToDelete) return;
-                  setIsDeleting(true);
-                  const deletedId = noteToDelete.id;
-                  const success = await deleteNote(deletedId);
-                  setIsDeleting(false);
-                  if (success) {
-                    setNoteToDelete(null);
-                    if (pathname === `/notes/${deletedId}`) {
-                      router.push("/");
-                    }
-                  }
-                }}
-                className="rounded-lg bg-[var(--error)] hover:opacity-90 px-3.5 py-1.5 text-xs font-sans font-medium text-white transition-opacity disabled:opacity-50 cursor-pointer"
-              >
-                {isDeleting ? "Deleting..." : "Delete"}
-              </button>
-            </div>
-          </div>
-        </div>
       )}
 
       {/* Sidebar Container */}
@@ -519,6 +466,9 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                             e.preventDefault();
                             e.stopPropagation();
                             setOpenMenuId(null);
+                            if (onClose) {
+                              onClose();
+                            }
                             setNoteToDelete(item);
                           }}
                           className="flex w-full items-center gap-2 px-3 py-1.5 text-xs font-sans font-medium text-[var(--error)] hover:bg-[var(--error)]/10 transition-colors text-left cursor-pointer"
@@ -595,6 +545,59 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           </a>
         </div>
       </aside>
+
+      {/* Delete Confirmation Modal (Highest stacking layer above sidebar & backdrop) */}
+      {noteToDelete && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4"
+          onClick={() => !isDeleting && setNoteToDelete(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-sm rounded-xl border border-[var(--border)] bg-[var(--surface-card)] p-5 space-y-4 shadow-2xl"
+          >
+            <div className="space-y-1.5">
+              <h3 className="text-sm font-sans font-semibold text-[var(--text-primary)]">
+                Delete this recording?
+              </h3>
+              <p className="text-xs font-sans text-[var(--text-secondary)] leading-relaxed">
+                This will permanently delete the audio, transcript and summary.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-1">
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => setNoteToDelete(null)}
+                className="rounded-lg border border-[var(--border)] bg-[var(--surface-secondary)] hover:bg-[var(--surface-hover)] px-3.5 py-1.5 text-xs font-sans font-medium text-[var(--text-primary)] transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={async () => {
+                  if (!noteToDelete) return;
+                  setIsDeleting(true);
+                  const deletedId = noteToDelete.id;
+                  const success = await deleteNote(deletedId);
+                  setIsDeleting(false);
+                  if (success) {
+                    setNoteToDelete(null);
+                    if (pathname === `/notes/${deletedId}`) {
+                      router.push("/");
+                    }
+                  }
+                }}
+                className="rounded-lg bg-[var(--error)] hover:opacity-90 px-3.5 py-1.5 text-xs font-sans font-medium text-white transition-opacity disabled:opacity-50 cursor-pointer"
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
