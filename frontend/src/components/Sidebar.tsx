@@ -551,7 +551,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           </Link>
 
           <a
-            href="https://github.com/placeholder-audio-notes/audio-notes-platform"
+            href="https://github.com/kanishka5268/Voxa-audio-notes-platform"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-between rounded-lg px-2 py-1.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface)] transition-colors font-medium text-xs"

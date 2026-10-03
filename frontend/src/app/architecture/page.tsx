@@ -10,7 +10,7 @@ export const metadata = {
 export default function ArchitecturePage() {
   const githubUrl =
     process.env.NEXT_PUBLIC_GITHUB_URL ||
-    "https://github.com/placeholder-audio-notes/audio-notes-platform";
+    "https://github.com/kanishka5268/Voxa-audio-notes-platform";
 
   return (
     <div className="flex min-h-full flex-col items-center justify-start px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
@@ -44,7 +44,7 @@ export default function ArchitecturePage() {
               <path d="M9 18c-4.51 2-5-2-7-2" />
             </svg>
             <span>GitHub Repository</span>
-            <span className="text-[10px] text-[var(--text-muted)]">&nearr;</span>
+            <span className="text-[10px] text-[var(--text-muted)]">&#8599;</span>
           </a>
         </div>
 
@@ -428,7 +428,7 @@ export default function ArchitecturePage() {
                 <path d="M9 18c-4.51 2-5-2-7-2" />
               </svg>
               <span>View Repository on GitHub</span>
-              <span>&nearr;</span>
+              <span>&#8599;</span>
             </a>
           </div>
         </section>
