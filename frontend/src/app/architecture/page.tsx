@@ -101,7 +101,7 @@ export default function ArchitecturePage() {
                 </h3>
               </div>
               <p className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed">
-                The user selects an audio file and speech language in the Next.js frontend. The file is sent to the FastAPI backend as a multipart upload.
+                The user selects an audio file and speech language in the Next.js frontend (deployed on Vercel). The file is sent to the FastAPI backend (deployed on Render) as a multipart upload.
               </p>
 
               {/* Connector: 1 -> 2 (Desktop: Right arrow) */}
@@ -374,14 +374,17 @@ export default function ArchitecturePage() {
           <h2 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] font-sans">
             Core Technology Stack
           </h2>
+          <p className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed">
+            The frontend is a Next.js application deployed on Vercel that communicates with the deployed FastAPI backend on Render through its API. Supabase provides the PostgreSQL database and private audio Storage, while the backend handles background processing and communicates with Gnani Batch STT and Groq.
+          </p>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center text-xs">
             <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3.5 shadow-xs">
               <p className="font-sans font-semibold text-[var(--text-primary)]">Next.js</p>
-              <p className="text-[10px] text-[var(--text-muted)] mt-0.5 font-mono">App Router · UI</p>
+              <p className="text-[10px] text-[var(--text-muted)] mt-0.5 font-mono">App Router · Vercel</p>
             </div>
             <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3.5 shadow-xs">
               <p className="font-sans font-semibold text-[var(--text-primary)]">FastAPI</p>
-              <p className="text-[10px] text-[var(--text-muted)] mt-0.5 font-mono">REST &amp; Background</p>
+              <p className="text-[10px] text-[var(--text-muted)] mt-0.5 font-mono">Render · Background</p>
             </div>
             <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3.5 shadow-xs">
               <p className="font-sans font-semibold text-[var(--text-primary)]">Supabase</p>
