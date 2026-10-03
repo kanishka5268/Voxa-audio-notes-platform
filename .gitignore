@@ -20,3 +20,8 @@ __pycache__/
 # Logs & temp
 *.log
 .DS_Store
+
+# IDE / OS
+.vscode/
+.idea/
+Thumbs.db
